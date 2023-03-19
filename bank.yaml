@@ -1,0 +1,37 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: s3-deploy
+  labels:
+    app: s3_bk_app
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: s3_bk_app
+  template:
+    metadata:
+      labels:
+        app: s3_bk_app
+    spec:
+      containers:
+      - name: s3-bk-container
+        image: shanth19611356248/bk_app
+        ports:
+        - containerPort: 8080
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: s3-np-service
+  labels:
+    app: s3_bk_app
+spec:
+  selector:
+    app: s3_bk_app
+
+  type: NodePort
+  ports:
+  - nodePort: 33000
+    port: 8080
+    targetPort: 8080
